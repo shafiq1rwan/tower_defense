@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://jpaurvev83bi"]
+
+[ext_resource type="Texture2D" uid="uid://d4mdntgo6u5bp" path="res://assets/Tower_Purple.png" id="1_ph3r8"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_mjnu5"]
+radius = 43.0
+height = 210.0
+
+[node name="PlayerTower" type="Node2D"]
+
+[node name="CharacterBody2D" type="CharacterBody2D" parent="."]
+
+[node name="Sprite2D" type="Sprite2D" parent="CharacterBody2D"]
+texture = ExtResource("1_ph3r8")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="CharacterBody2D"]
+shape = SubResource("CapsuleShape2D_mjnu5")

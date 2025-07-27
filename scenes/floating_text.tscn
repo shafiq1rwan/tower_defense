@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://ctorkro6v7let"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ewr6a"]
+font_size = 20
+font_color = Color(0.733333, 0.184314, 0.184314, 1)
+
+[node name="FloatingText" type="Label"]
+offset_right = 40.0
+offset_bottom = 23.0
+label_settings = SubResource("LabelSettings_ewr6a")
