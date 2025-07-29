@@ -7,11 +7,14 @@ extends Node2D
 @onready var spawn_timer = $EnemySpawnTimer
 @onready var money_label = $CanvasLayer/MoneyLabel
 @onready var archer_button = $CanvasLayer/ArcherButton
+@onready var camera = $Camera2D
+
 var archer_scene = preload("res://scenes/archer.tscn")
 var warrior_scene = preload("res://scenes/warrior.tscn")
 var unit_scene = preload("res://scenes/unit.tscn")
 var enemy_scene = preload("res://scenes/enemy.tscn")
 var floating_text_scene = preload("res://scenes/floating_text.tscn")
+var tnt_thrower_scene = preload("res://scenes/tnt_thrower.tscn")
 
 var player_units = []
 var enemy_units = []
@@ -62,12 +65,18 @@ func spawn_warrior():
 	player_units.append(unit)
 
 func _on_enemy_spawn_timer_timeout():
-	var enemy = enemy_scene.instantiate()
+	var enemy
+
+	#if randi() % 4 == 0:  # ~25% chance to spawn TNTThrower
+	#	enemy = tnt_thrower_scene.instantiate()
+	#else:
+	enemy = enemy_scene.instantiate()
+
 	enemy.position = enemy_tower.position + Vector2(-50, 60)
-	enemy.set_meta("hp", 10)
-	enemy.set_meta("damage", 1)
-	enemy.add_to_group("enemy")
+	enemy.set_meta("hp", 20)  # More HP?
+	enemy.set_meta("damage", 0)  # Let dynamite do the damage
 	add_child(enemy)
+	enemy.add_to_group("enemy")
 	enemy_units.append(enemy)
 
 func update_units(delta):
@@ -163,3 +172,9 @@ func spawn_archer():
 	unit.set_meta("unit_type", "archer")
 	add_child(unit)
 	player_units.append(unit)
+
+func shake_camera(duration := 0.2, intensity := 6):
+	var tween = create_tween()
+	var random_offset = Vector2(randf() * intensity, randf() * intensity)
+	tween.tween_property(camera, "offset", random_offset, duration / 2)
+	tween.tween_property(camera, "offset", Vector2.ZERO, duration / 2)

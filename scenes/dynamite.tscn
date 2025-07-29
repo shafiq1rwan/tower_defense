@@ -1,8 +1,11 @@
-[gd_scene load_steps=2 format=3 uid="uid://b6i5whf440fih"]
+[gd_scene load_steps=3 format=3 uid="uid://b6i5whf440fih"]
 
 [ext_resource type="Script" uid="uid://6wlwviwy6f7f" path="res://scripts/dynamite.gd" id="1_rst6a"]
+[ext_resource type="Texture2D" uid="uid://bgs3jkvd6dqjj" path="res://assets/Dynamite.png" id="2_ys8y4"]
 
 [node name="Dynamite" type="Node2D"]
 script = ExtResource("1_rst6a")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_ys8y4")
+hframes = 6

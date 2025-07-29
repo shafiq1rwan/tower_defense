@@ -8,38 +8,48 @@ extends CharacterBody2D
 @onready var detection_area = $Area2D
 @onready var throw_timer = $throw_timer
 
-var target_in_range = false
-var throwing = false
+var target_in_range: Node = null
+var throwing: bool = false
 
 func _ready():
+	add_to_group("enemy")
+
 	throw_timer.wait_time = throw_rate
 	throw_timer.timeout.connect(_on_throw_timer_timeout)
 	detection_area.body_entered.connect(_on_body_entered)
 	detection_area.body_exited.connect(_on_body_exited)
+
 	throw_timer.start()
 
 func _physics_process(delta):
-	if throwing:
+	if target_in_range and is_instance_valid(target_in_range):
+		# Stop and attack
 		velocity = Vector2.ZERO
-		sprite.play("throw")
+		if sprite.animation != "attack":
+			sprite.play("attack")
 	else:
-		sprite.play("default")
-		velocity.x = -move_speed  # Walks left toward player
+		# Walk toward the tower
+		velocity.x = -move_speed
+		if sprite.animation != "default":
+			sprite.play("default")
 
 	move_and_slide()
 
 func _on_body_entered(body):
-	if body.is_in_group("player"):
-		target_in_range = true
+	if body.is_in_group("player") and target_in_range == null:
+		target_in_range = body
+		_on_throw_timer_timeout()  # throw immediately upon detection
 
 func _on_body_exited(body):
-	if body.is_in_group("player"):
-		target_in_range = false
+	if body == target_in_range:
+		target_in_range = null
 
 func _on_throw_timer_timeout():
-	if target_in_range and not throwing:
-		throwing = true
+	if target_in_range and is_instance_valid(target_in_range):
 		var dynamite = dynamite_scene.instantiate()
 		dynamite.position = global_position + Vector2(-20, -30)
-		dynamite.thrower = self  # Pass reference so it can resume moving later
+		dynamite.thrower = self
 		get_tree().current_scene.add_child(dynamite)
+
+		# Prevent constant throwing
+		throw_timer.start()

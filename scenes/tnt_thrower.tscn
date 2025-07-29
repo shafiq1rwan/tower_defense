@@ -1,7 +1,36 @@
-[gd_scene load_steps=12 format=3 uid="uid://bewh0iam70r6x"]
+[gd_scene load_steps=20 format=3 uid="uid://bewh0iam70r6x"]
 
 [ext_resource type="Texture2D" uid="uid://ccf5pj1c0dhrl" path="res://assets/TNT_Red.png" id="1_832eu"]
 [ext_resource type="Script" uid="uid://cyow8o73qtnsu" path="res://scripts/tnt_thrower.gd" id="1_kfxe2"]
+[ext_resource type="PackedScene" uid="uid://b6i5whf440fih" path="res://scenes/dynamite.tscn" id="2_2l4lw"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_lgr5h"]
+atlas = ExtResource("1_832eu")
+region = Rect2(0, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_2l4lw"]
+atlas = ExtResource("1_832eu")
+region = Rect2(192, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_y63n3"]
+atlas = ExtResource("1_832eu")
+region = Rect2(384, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5hte3"]
+atlas = ExtResource("1_832eu")
+region = Rect2(576, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_blvcd"]
+atlas = ExtResource("1_832eu")
+region = Rect2(768, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5vmsa"]
+atlas = ExtResource("1_832eu")
+region = Rect2(960, 384, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xlsry"]
+atlas = ExtResource("1_832eu")
+region = Rect2(1152, 384, 192, 192)
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_kfxe2"]
 atlas = ExtResource("1_832eu")
@@ -31,6 +60,32 @@ region = Rect2(960, 192, 192, 192)
 animations = [{
 "frames": [{
 "duration": 1.0,
+"texture": SubResource("AtlasTexture_lgr5h")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_2l4lw")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_y63n3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5hte3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_blvcd")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5vmsa")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xlsry")
+}],
+"loop": true,
+"name": &"attack",
+"speed": 10.0
+}, {
+"frames": [{
+"duration": 1.0,
 "texture": SubResource("AtlasTexture_kfxe2")
 }, {
 "duration": 1.0,
@@ -57,16 +112,21 @@ animations = [{
 radius = 48.6621
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_svv18"]
-radius = 131.939
+radius = 152.0
 
 [node name="TNTThrower" type="CharacterBody2D"]
 script = ExtResource("1_kfxe2")
+dynamite_scene = ExtResource("2_2l4lw")
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_h57k2")
+animation = &"attack"
+autoplay = "default"
+flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_2oxqh")
+disabled = true
 debug_color = Color(0.893551, 0.0380067, 0.771693, 0.42)
 
 [node name="Area2D" type="Area2D" parent="."]
