@@ -1,0 +1,14 @@
+[gd_scene load_steps=2 format=3 uid="uid://xky1mtx2ywax"]
+
+[ext_resource type="Script" uid="uid://dfwcfekcdqcw4" path="res://scripts/hp_bar.gd" id="1_e8frx"]
+
+[node name="HP_Bar" type="Node2D"]
+script = ExtResource("1_e8frx")
+
+[node name="Bar" type="TextureProgressBar" parent="."]
+offset_right = 40.0
+offset_bottom = 40.0
+value = 100.0
+rounded = true
+tint_under = Color(0.266339, 0.343902, 0.405674, 1)
+tint_progress = Color(0.16319, 0.51962, 0.24999, 1)

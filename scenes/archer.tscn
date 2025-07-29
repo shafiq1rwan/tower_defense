@@ -128,7 +128,7 @@ projectile_scene = ExtResource("2_orquw")
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 sprite_frames = SubResource("SpriteFrames_iadyh")
 autoplay = "default"
-frame_progress = 0.567011
+frame_progress = 0.825811
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_b0l3x")
