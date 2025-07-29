@@ -11,13 +11,17 @@ extends Node2D
 @onready var wave_banner = $CanvasLayer/WaveBanner
 @onready var player_tower_hp_bar = $CanvasLayer/PlayerTowerHP
 @onready var enemy_tower_hp_bar = $CanvasLayer/EnemyTowerHP
+@onready var game_over_label = $CanvasLayer/GameOverLabel
+@onready var game_over_dim = $CanvasLayer/GameOverDim
+@onready var restart_button = $CanvasLayer/RestartButton
+@onready var quit_button = $CanvasLayer/QuitButton
+@onready var tween = create_tween()
 
 # Wave system variables
 var wave := 1
 var enemies_per_wave := 4
 var enemies_left := 0
 var wave_in_progress := false
-
 
 # Preload scene files
 var archer_scene = preload("res://scenes/archer.tscn")
@@ -35,6 +39,9 @@ var enemy_units = []
 var player_tower_hp = 50
 var enemy_tower_hp = 50
 var money = 50
+# Define lane Y positions relative to the towers
+var lanes = [40, 60, 80]  # You can adjust these for spacing
+var game_over = false
 
 func _ready():
 	player_tower_hp_bar.max_value = 50
@@ -51,8 +58,16 @@ func _ready():
 	update_ui()
 
 func _process(delta):
+	if game_over:
+		return
+		
 	update_units(delta)
 	update_ui()
+	
+	if player_tower_hp <= 0:
+		show_game_result("Defeat!")
+	elif enemy_tower_hp <= 0:
+		show_game_result("Victory!")
 
 # Update UI (money display)
 func update_ui():
@@ -66,7 +81,8 @@ func spawn_unit():
 		return
 	money -= 10
 	var unit = unit_scene.instantiate()
-	unit.position = player_tower.position + Vector2(50, 60)
+	var lane_y = lanes.pick_random()
+	unit.position = player_tower.position + Vector2(50, lane_y)
 	unit.set_meta("hp", 10)
 	unit.set_meta("damage", 2)
 	unit.add_to_group("player")
@@ -87,7 +103,8 @@ func spawn_warrior():
 		return
 	money -= 30
 	var unit = warrior_scene.instantiate()
-	unit.position = player_tower.position + Vector2(50, 60)
+	var lane_y = lanes.pick_random()
+	unit.position = player_tower.position + Vector2(50, lane_y)
 	unit.set_meta("hp", 20)
 	unit.set_meta("damage", 3)
 	unit.add_to_group("player")
@@ -108,7 +125,8 @@ func spawn_archer():
 		return
 	money -= 40
 	var unit = archer_scene.instantiate()
-	unit.position = player_tower.position + Vector2(50, 60)
+	var lane_y = lanes.pick_random()
+	unit.position = player_tower.position + Vector2(50, lane_y)
 	unit.set_meta("hp", 15)
 	unit.set_meta("damage", 3)
 	unit.add_to_group("player")
@@ -127,12 +145,13 @@ func spawn_archer():
 func _on_enemy_spawn_timer_timeout():
 	if enemies_left <= 0:
 		spawn_timer.stop()
-		await get_tree().create_timer(3.0).timeout
+		await get_tree().create_timer(5.0).timeout
 		next_wave()
 		return
 
 	var enemy = enemy_scene.instantiate()
-	enemy.position = enemy_tower.position + Vector2(-50, 60)
+	var lane_y = lanes.pick_random()
+	enemy.position = enemy_tower.position + Vector2(-50, lane_y)
 	enemy.set_meta("hp", 20 + wave * 2)
 	enemy.set_meta("damage", 1)  # Set damage for enemies
 	enemy.add_to_group("enemy")
@@ -270,3 +289,33 @@ func shake_camera(duration := 0.2, intensity := 6):
 	var random_offset = Vector2(randf() * intensity, randf() * intensity)
 	tween.tween_property(camera, "offset", random_offset, duration / 2)
 	tween.tween_property(camera, "offset", Vector2.ZERO, duration / 2)
+
+func show_game_result(result_text: String):
+	game_over = true
+	spawn_timer.stop()
+
+	# Set up initial states
+	game_over_label.text = result_text
+	game_over_label.visible = true
+	game_over_label.modulate.a = 0.0
+	game_over_dim.visible = true
+	game_over_dim.color.a = 0.0
+	restart_button.visible = false
+	quit_button.visible = false
+
+	# Start tween animation
+	tween = create_tween()
+	tween.tween_property(game_over_label, "modulate:a", 1.0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	tween.tween_property(game_over_dim, "color:a", 0.5, 1.0).set_trans(Tween.TRANS_LINEAR)
+	tween.tween_interval(0.5)  # Wait before showing buttons
+	tween.tween_callback(Callable(self, "_on_game_over_animation_finished"))
+
+func _on_game_over_animation_finished():
+	restart_button.visible = true
+	quit_button.visible = true
+
+func _on_restart_button_pressed() -> void:
+	get_tree().reload_current_scene()
+
+func _on_quit_button_pressed() -> void:
+	get_tree().quit()

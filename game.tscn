@@ -1,11 +1,15 @@
-[gd_scene load_steps=12 format=3 uid="uid://re31twqfkn07"]
+[gd_scene load_steps=17 format=3 uid="uid://re31twqfkn07"]
 
 [ext_resource type="Texture2D" uid="uid://by4y10jpkrxxk" path="res://assets/Hills Free (update 3.0).png" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://dcm1jx2wvfeik" path="res://game.gd" id="1_ryrav"]
+[ext_resource type="Texture2D" uid="uid://cdbo2ifgrk572" path="res://assets/Buttons/Button_Blue_3Slides.png" id="2_feb5d"]
 [ext_resource type="Texture2D" uid="uid://ce5iy0jhb2hsg" path="res://assets/Buttons/Button_Blue.png" id="3_eow3j"]
+[ext_resource type="Texture2D" uid="uid://dy5hvlif51q8n" path="res://assets/Buttons/Button_Blue_3Slides_Pressed.png" id="3_fc0e3"]
 [ext_resource type="PackedScene" uid="uid://jpaurvev83bi" path="res://scenes/player_tower.tscn" id="4_7jktm"]
+[ext_resource type="Texture2D" uid="uid://d2ebhu1a15c5c" path="res://assets/Buttons/Button_Red_3Slides.png" id="5_hve3p"]
 [ext_resource type="Texture2D" uid="uid://bbycox2wa5ynr" path="res://assets/Buttons/Button_Blue_Pressed.png" id="5_j5wjh"]
 [ext_resource type="PackedScene" uid="uid://busxqqjr0b75y" path="res://scenes/enemy_tower.tscn" id="5_ryrav"]
+[ext_resource type="Texture2D" uid="uid://bmfuodj26ldg8" path="res://assets/Buttons/Button_Red_3Slides_Pressed.png" id="6_mfdv2"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_80nbo"]
 font_size = 40
@@ -22,6 +26,9 @@ bg_color = Color(0.0207815, 0.719128, 0.341729, 1)
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eow3j"]
 bg_color = Color(0.973661, 0.366438, 0.376275, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_eow3j"]
+font_size = 200
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_ryrav")
@@ -93,10 +100,17 @@ text = "🏹"
 label_settings = SubResource("LabelSettings_7jktm")
 
 [node name="WaveBanner" type="Label" parent="CanvasLayer"]
-offset_left = 160.0
-offset_top = 80.0
-offset_right = 200.0
-offset_bottom = 489.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -204.5
+offset_right = 20.0
+offset_bottom = 204.5
+grow_horizontal = 2
+grow_vertical = 2
 label_settings = SubResource("LabelSettings_ryrav")
 horizontal_alignment = 1
 vertical_alignment = 1
@@ -122,6 +136,70 @@ rounded = true
 fill_mode = 1
 show_percentage = false
 
+[node name="GameOverLabel" type="Label" parent="CanvasLayer"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.5
+offset_right = 20.0
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 6
+size_flags_vertical = 6
+label_settings = SubResource("LabelSettings_eow3j")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="GameOverDim" type="ColorRect" parent="CanvasLayer"]
+visible = false
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0, 0, 0, 0)
+
+[node name="RestartButton" type="TextureButton" parent="CanvasLayer"]
+offset_left = 544.0
+offset_top = 480.0
+offset_right = 736.0
+offset_bottom = 544.0
+texture_normal = ExtResource("5_hve3p")
+texture_pressed = ExtResource("6_mfdv2")
+
+[node name="Label" type="Label" parent="CanvasLayer/RestartButton"]
+layout_mode = 0
+offset_left = 64.0
+offset_top = 11.0
+offset_right = 121.0
+offset_bottom = 34.0
+text = "Restart"
+
+[node name="QuitButton" type="TextureButton" parent="CanvasLayer"]
+offset_left = 544.0
+offset_top = 560.0
+offset_right = 736.0
+offset_bottom = 624.0
+texture_normal = ExtResource("2_feb5d")
+texture_pressed = ExtResource("3_fc0e3")
+
+[node name="Label" type="Label" parent="CanvasLayer/QuitButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.5
+offset_right = 20.0
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit"
+
 [node name="PlayerTower" parent="." instance=ExtResource("4_7jktm")]
 position = Vector2(100, 590)
 
@@ -134,4 +212,6 @@ autostart = true
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(640, 360)
 
+[connection signal="pressed" from="CanvasLayer/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/QuitButton" to="." method="_on_quit_button_pressed"]
 [connection signal="timeout" from="EnemySpawnTimer" to="." method="_on_enemy_spawn_timer_timeout"]
