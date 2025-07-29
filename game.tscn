@@ -1,10 +1,10 @@
-[gd_scene load_steps=10 format=3 uid="uid://re31twqfkn07"]
+[gd_scene load_steps=12 format=3 uid="uid://re31twqfkn07"]
 
 [ext_resource type="Texture2D" uid="uid://by4y10jpkrxxk" path="res://assets/Hills Free (update 3.0).png" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://dcm1jx2wvfeik" path="res://game.gd" id="1_ryrav"]
-[ext_resource type="Texture2D" uid="uid://cdbo2ifgrk572" path="res://assets/Buttons/Button_Blue_3Slides.png" id="2_feb5d"]
-[ext_resource type="Texture2D" uid="uid://dy5hvlif51q8n" path="res://assets/Buttons/Button_Blue_3Slides_Pressed.png" id="3_fc0e3"]
+[ext_resource type="Texture2D" uid="uid://ce5iy0jhb2hsg" path="res://assets/Buttons/Button_Blue.png" id="3_eow3j"]
 [ext_resource type="PackedScene" uid="uid://jpaurvev83bi" path="res://scenes/player_tower.tscn" id="4_7jktm"]
+[ext_resource type="Texture2D" uid="uid://bbycox2wa5ynr" path="res://assets/Buttons/Button_Blue_Pressed.png" id="5_j5wjh"]
 [ext_resource type="PackedScene" uid="uid://busxqqjr0b75y" path="res://scenes/enemy_tower.tscn" id="5_ryrav"]
 
 [sub_resource type="LabelSettings" id="LabelSettings_80nbo"]
@@ -17,20 +17,26 @@ font_size = 20
 [sub_resource type="LabelSettings" id="LabelSettings_ryrav"]
 font_size = 250
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ryrav"]
+bg_color = Color(0.0207815, 0.719128, 0.341729, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eow3j"]
+bg_color = Color(0.973661, 0.366438, 0.376275, 1)
+
 [node name="Game" type="Node2D"]
 script = ExtResource("1_ryrav")
 
 [node name="Background" type="Sprite2D" parent="."]
-position = Vector2(616, 352)
-scale = Vector2(2.875, 2.875)
+position = Vector2(680, 336)
+scale = Vector2(3.25, 3.25)
 texture = ExtResource("1_80nbo")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="MoneyLabel" type="Label" parent="CanvasLayer"]
-offset_left = 8.0
+offset_left = 16.0
 offset_top = 8.0
-offset_right = 200.0
+offset_right = 214.0
 offset_bottom = 77.0
 text = "Money: 50"
 label_settings = SubResource("LabelSettings_80nbo")
@@ -38,52 +44,52 @@ label_settings = SubResource("LabelSettings_80nbo")
 [node name="SpawnButton" type="TextureButton" parent="CanvasLayer"]
 offset_left = 1080.0
 offset_top = 8.0
-offset_right = 1272.0
+offset_right = 1144.0
 offset_bottom = 72.0
-texture_normal = ExtResource("2_feb5d")
-texture_pressed = ExtResource("3_fc0e3")
+texture_normal = ExtResource("3_eow3j")
+texture_pressed = ExtResource("5_j5wjh")
 
 [node name="SpawnText" type="Label" parent="CanvasLayer/SpawnButton"]
 layout_mode = 0
-offset_left = 43.0
-offset_top = 8.0
-offset_right = 154.0
-offset_bottom = 36.0
-text = "Spawn Unit"
+offset_left = 18.0
+offset_top = 12.0
+offset_right = 46.0
+offset_bottom = 40.0
+text = "⚔"
 label_settings = SubResource("LabelSettings_7jktm")
 
 [node name="WarriorButton" type="TextureButton" parent="CanvasLayer"]
-offset_left = 1080.0
-offset_top = 80.0
-offset_right = 1272.0
-offset_bottom = 144.0
-texture_normal = ExtResource("2_feb5d")
-texture_pressed = ExtResource("3_fc0e3")
+offset_left = 1144.0
+offset_top = 8.0
+offset_right = 1208.0
+offset_bottom = 72.0
+texture_normal = ExtResource("3_eow3j")
+texture_pressed = ExtResource("5_j5wjh")
 
 [node name="SpawnText" type="Label" parent="CanvasLayer/WarriorButton"]
 layout_mode = 0
-offset_left = 24.0
-offset_top = 8.0
-offset_right = 168.0
-offset_bottom = 36.0
-text = "Spawn Warrior"
+offset_left = 18.0
+offset_top = 12.0
+offset_right = 46.0
+offset_bottom = 40.0
+text = "🗡"
 label_settings = SubResource("LabelSettings_7jktm")
 
 [node name="ArcherButton" type="TextureButton" parent="CanvasLayer"]
-offset_left = 1078.0
-offset_top = 146.0
-offset_right = 1270.0
-offset_bottom = 210.0
-texture_normal = ExtResource("2_feb5d")
-texture_pressed = ExtResource("3_fc0e3")
+offset_left = 1208.0
+offset_top = 8.0
+offset_right = 1272.0
+offset_bottom = 72.0
+texture_normal = ExtResource("3_eow3j")
+texture_pressed = ExtResource("5_j5wjh")
 
 [node name="SpawnText" type="Label" parent="CanvasLayer/ArcherButton"]
 layout_mode = 0
-offset_left = 31.0
-offset_top = 7.0
-offset_right = 175.0
-offset_bottom = 35.0
-text = "Spawn Archer"
+offset_left = 18.0
+offset_top = 12.0
+offset_right = 46.0
+offset_bottom = 40.0
+text = "🏹"
 label_settings = SubResource("LabelSettings_7jktm")
 
 [node name="WaveBanner" type="Label" parent="CanvasLayer"]
@@ -95,11 +101,32 @@ label_settings = SubResource("LabelSettings_ryrav")
 horizontal_alignment = 1
 vertical_alignment = 1
 
+[node name="PlayerTowerHP" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 16.0
+offset_top = 72.0
+offset_right = 520.0
+offset_bottom = 99.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_ryrav")
+max_value = 50.0
+rounded = true
+show_percentage = false
+
+[node name="EnemyTowerHP" type="ProgressBar" parent="CanvasLayer"]
+offset_left = 760.0
+offset_top = 72.0
+offset_right = 1264.0
+offset_bottom = 99.0
+theme_override_styles/fill = SubResource("StyleBoxFlat_eow3j")
+max_value = 50.0
+rounded = true
+fill_mode = 1
+show_percentage = false
+
 [node name="PlayerTower" parent="." instance=ExtResource("4_7jktm")]
 position = Vector2(100, 590)
 
 [node name="EnemyTower" parent="." instance=ExtResource("5_ryrav")]
-position = Vector2(1150, 590)
+position = Vector2(1168, 592)
 
 [node name="EnemySpawnTimer" type="Timer" parent="."]
 autostart = true

@@ -9,12 +9,15 @@ extends Node2D
 @onready var archer_button = $CanvasLayer/ArcherButton
 @onready var camera = $Camera2D
 @onready var wave_banner = $CanvasLayer/WaveBanner
+@onready var player_tower_hp_bar = $CanvasLayer/PlayerTowerHP
+@onready var enemy_tower_hp_bar = $CanvasLayer/EnemyTowerHP
 
 # Wave system variables
 var wave := 1
 var enemies_per_wave := 4
 var enemies_left := 0
 var wave_in_progress := false
+
 
 # Preload scene files
 var archer_scene = preload("res://scenes/archer.tscn")
@@ -29,11 +32,17 @@ var player_units = []
 var enemy_units = []
 
 # Player and enemy towers
-var player_tower_hp = 100
-var enemy_tower_hp = 100
+var player_tower_hp = 50
+var enemy_tower_hp = 50
 var money = 50
 
 func _ready():
+	player_tower_hp_bar.max_value = 50
+	player_tower_hp_bar.value = player_tower_hp
+
+	enemy_tower_hp_bar.max_value = 50
+	enemy_tower_hp_bar.value = enemy_tower_hp
+	
 	spawn_timer.wait_time = 3.0
 	unit_button.pressed.connect(spawn_unit)
 	warrior_button.pressed.connect(spawn_warrior)
@@ -48,6 +57,8 @@ func _process(delta):
 # Update UI (money display)
 func update_ui():
 	money_label.text = "Money: " + str(money)
+	player_tower_hp_bar.value = player_tower_hp
+	enemy_tower_hp_bar.value = enemy_tower_hp
 
 # Spawn basic unit
 func spawn_unit():
@@ -209,10 +220,10 @@ func handle_combat(attacker, target, is_enemy, delta):
 		if timer >= 1.0:
 			# Apply damage to the tower
 			if is_enemy:
-				player_tower_hp -= dmg
+				player_tower_hp = max(player_tower_hp - dmg, 0)
 				show_floating_text(player_tower.position, dmg)
 			else:
-				enemy_tower_hp -= dmg
+				enemy_tower_hp = max(enemy_tower_hp - dmg, 0)
 				show_floating_text(enemy_tower.position, dmg)
 			timer = 0
 		attacker.set_meta("attack_timer", timer)
