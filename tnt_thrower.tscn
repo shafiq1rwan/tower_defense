@@ -1,0 +1,77 @@
+[gd_scene load_steps=12 format=3 uid="uid://bewh0iam70r6x"]
+
+[ext_resource type="Texture2D" uid="uid://ccf5pj1c0dhrl" path="res://assets/TNT_Red.png" id="1_832eu"]
+[ext_resource type="Script" uid="uid://cyow8o73qtnsu" path="res://scripts/tnt_thrower.gd" id="1_kfxe2"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_kfxe2"]
+atlas = ExtResource("1_832eu")
+region = Rect2(0, 192, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fv6ll"]
+atlas = ExtResource("1_832eu")
+region = Rect2(192, 192, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_k3ufr"]
+atlas = ExtResource("1_832eu")
+region = Rect2(384, 192, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6704b"]
+atlas = ExtResource("1_832eu")
+region = Rect2(576, 192, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0nob7"]
+atlas = ExtResource("1_832eu")
+region = Rect2(768, 192, 192, 192)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ln5cj"]
+atlas = ExtResource("1_832eu")
+region = Rect2(960, 192, 192, 192)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_h57k2"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_kfxe2")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fv6ll")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_k3ufr")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6704b")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0nob7")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ln5cj")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_2oxqh"]
+radius = 48.6621
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_svv18"]
+radius = 131.939
+
+[node name="TNTThrower" type="CharacterBody2D"]
+script = ExtResource("1_kfxe2")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_h57k2")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_2oxqh")
+debug_color = Color(0.893551, 0.0380067, 0.771693, 0.42)
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_svv18")
+
+[node name="throw_timer" type="Timer" parent="."]

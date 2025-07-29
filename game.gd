@@ -43,6 +43,8 @@ func spawn_unit():
 	unit.position = player_tower.position + Vector2(50, 60)
 	unit.set_meta("hp", 10)
 	unit.set_meta("damage", 2)
+	unit.add_to_group("player")
+	unit.set_meta("unit_type", "melee")
 	add_child(unit)
 	player_units.append(unit)
 
@@ -54,6 +56,8 @@ func spawn_warrior():
 	unit.position = player_tower.position + Vector2(50, 60)
 	unit.set_meta("hp", 20)
 	unit.set_meta("damage", 3)
+	unit.add_to_group("player")
+	unit.set_meta("unit_type", "melee")
 	add_child(unit)
 	player_units.append(unit)
 
@@ -62,12 +66,18 @@ func _on_enemy_spawn_timer_timeout():
 	enemy.position = enemy_tower.position + Vector2(-50, 60)
 	enemy.set_meta("hp", 10)
 	enemy.set_meta("damage", 1)
+	enemy.add_to_group("enemy")
 	add_child(enemy)
 	enemy_units.append(enemy)
 
 func update_units(delta):
 	for unit in player_units:
 		if not is_instance_valid(unit): continue
+
+		# ✅ Skip archers — they handle their own targeting & shooting
+		if unit.get_meta("unit_type", "") == "archer":
+			continue
+
 		var enemy = get_closest_target(unit, enemy_units, enemy_tower)
 		handle_combat(unit, enemy, false, delta)
 
@@ -149,5 +159,7 @@ func spawn_archer():
 	unit.position = player_tower.position + Vector2(50, 60)
 	unit.set_meta("hp", 15)
 	unit.set_meta("damage", 3)
+	unit.add_to_group("player")
+	unit.set_meta("unit_type", "archer")
 	add_child(unit)
 	player_units.append(unit)

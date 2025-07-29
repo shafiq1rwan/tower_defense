@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://4btpdhiss4kj"]
+
+[node name="Explosion" type="Node2D"]
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+emission_shape = 1
+emission_sphere_radius = 1.0
