@@ -15,7 +15,7 @@ extends Node2D
 @onready var game_over_dim = $CanvasLayer/GameOverDim
 @onready var restart_button = $CanvasLayer/RestartButton
 @onready var quit_button = $CanvasLayer/QuitButton
-@onready var tween = create_tween()
+# @onready var tween = create_tween()
 
 # Wave system variables
 var wave := 1
@@ -42,6 +42,7 @@ var money = 50
 # Define lane Y positions relative to the towers
 var lanes = [40, 60, 80]  # You can adjust these for spacing
 var game_over = false
+var tween  # Declare the variable without assigning yet
 
 func _ready():
 	player_tower_hp_bar.max_value = 50
@@ -294,7 +295,7 @@ func show_game_result(result_text: String):
 	game_over = true
 	spawn_timer.stop()
 
-	# Set up initial states
+	# Set up UI states
 	game_over_label.text = result_text
 	game_over_label.visible = true
 	game_over_label.modulate.a = 0.0
@@ -303,11 +304,11 @@ func show_game_result(result_text: String):
 	restart_button.visible = false
 	quit_button.visible = false
 
-	# Start tween animation
+	# ✅ Safe to call here because the node is already ready
 	tween = create_tween()
 	tween.tween_property(game_over_label, "modulate:a", 1.0, 1.0).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	tween.tween_property(game_over_dim, "color:a", 0.5, 1.0).set_trans(Tween.TRANS_LINEAR)
-	tween.tween_interval(0.5)  # Wait before showing buttons
+	tween.tween_interval(0.5)
 	tween.tween_callback(Callable(self, "_on_game_over_animation_finished"))
 
 func _on_game_over_animation_finished():

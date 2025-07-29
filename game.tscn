@@ -162,6 +162,7 @@ offset_bottom = 720.0
 color = Color(0, 0, 0, 0)
 
 [node name="RestartButton" type="TextureButton" parent="CanvasLayer"]
+visible = false
 offset_left = 544.0
 offset_top = 480.0
 offset_right = 736.0
@@ -178,6 +179,7 @@ offset_bottom = 34.0
 text = "Restart"
 
 [node name="QuitButton" type="TextureButton" parent="CanvasLayer"]
+visible = false
 offset_left = 544.0
 offset_top = 560.0
 offset_right = 736.0
