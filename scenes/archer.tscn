@@ -1,0 +1,20 @@
+[gd_scene load_steps=4 format=3 uid="uid://bal0vqgtjlq8l"]
+
+[ext_resource type="Script" uid="uid://clgpjvq4mnv3m" path="res://scripts/archer.gd" id="1_jggnj"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_iadyh"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_iadyh"]
+
+[node name="Archer" type="Node2D"]
+script = ExtResource("1_jggnj")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_iadyh")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("CircleShape2D_iadyh")
+
+[node name="fire_timer" type="Timer" parent="."]

@@ -66,6 +66,23 @@ offset_bottom = 36.0
 text = "Spawn Warrior"
 label_settings = SubResource("LabelSettings_7jktm")
 
+[node name="ArcherButton" type="TextureButton" parent="CanvasLayer"]
+offset_left = 1080.0
+offset_top = 80.0
+offset_right = 1272.0
+offset_bottom = 144.0
+texture_normal = ExtResource("2_feb5d")
+texture_pressed = ExtResource("3_fc0e3")
+
+[node name="SpawnText" type="Label" parent="CanvasLayer/ArcherButton"]
+layout_mode = 0
+offset_left = 24.0
+offset_top = 8.0
+offset_right = 168.0
+offset_bottom = 36.0
+text = "Spawn Warrior"
+label_settings = SubResource("LabelSettings_7jktm")
+
 [node name="PlayerTower" parent="." instance=ExtResource("4_7jktm")]
 position = Vector2(100, 590)
 
