@@ -67,7 +67,10 @@ func _process(delta):
 	update_units(delta)
 	update_ui()
 
+	print("[DEBUG] enemy_units:", enemy_units.size(), "spawn queue:", enemies_to_spawn.size(), "in progress:", wave_in_progress)
+
 	if wave_in_progress and enemy_units.is_empty() and enemies_to_spawn.is_empty():
+		print("[DEBUG] Wave complete. Starting next wave...")
 		wave_in_progress = false
 		await get_tree().create_timer(1.0).timeout
 		next_wave()
@@ -183,9 +186,9 @@ func start_wave():
 		for i in range(entry["count"]):
 			enemies_to_spawn.append(entry["type"])
 
-	spawn_enemies_slowly()
+	await spawn_enemies_slowly()
 
-func spawn_enemies_slowly():
+func spawn_enemies_slowly() -> void:
 	await get_tree().process_frame
 	for enemy_type in enemies_to_spawn:
 		spawn_enemy(enemy_type)
@@ -193,6 +196,7 @@ func spawn_enemies_slowly():
 	enemies_to_spawn.clear()
 
 func next_wave():
+	print("[DEBUG] next_wave() called")
 	wave += 1
 	start_wave()
 
