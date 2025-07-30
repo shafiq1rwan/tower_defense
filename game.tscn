@@ -208,6 +208,9 @@ position = Vector2(100, 590)
 [node name="EnemyTower" parent="." instance=ExtResource("5_ryrav")]
 position = Vector2(1168, 592)
 
+[node name="UnitsRoot" type="Node2D" parent="."]
+y_sort_enabled = true
+
 [node name="EnemySpawnTimer" type="Timer" parent="."]
 autostart = true
 
