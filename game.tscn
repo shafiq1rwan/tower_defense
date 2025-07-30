@@ -122,7 +122,6 @@ offset_right = 520.0
 offset_bottom = 99.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_ryrav")
 max_value = 50.0
-rounded = true
 show_percentage = false
 
 [node name="EnemyTowerHP" type="ProgressBar" parent="CanvasLayer"]
@@ -132,7 +131,6 @@ offset_right = 1264.0
 offset_bottom = 99.0
 theme_override_styles/fill = SubResource("StyleBoxFlat_eow3j")
 max_value = 50.0
-rounded = true
 fill_mode = 1
 show_percentage = false
 

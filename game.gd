@@ -1,12 +1,11 @@
 extends Node2D
 
-@onready var units_root = $UnitsRoot  # NEW: Node2D with y_sort_enabled
+@onready var units_root = $UnitsRoot
 @onready var player_tower = $PlayerTower
 @onready var enemy_tower = $EnemyTower
 @onready var unit_button = $CanvasLayer/SpawnButton
 @onready var warrior_button = $CanvasLayer/WarriorButton
 @onready var archer_button = $CanvasLayer/ArcherButton
-@onready var spawn_timer = $EnemySpawnTimer
 @onready var money_label = $CanvasLayer/MoneyLabel
 @onready var camera = $Camera2D
 @onready var wave_banner = $CanvasLayer/WaveBanner
@@ -47,20 +46,16 @@ var waves = [
 	[{ "type": "normal", "count": 4 }, { "type": "strong", "count": 1 }],
 ]
 
-# Wave tracking
 var current_wave_plan = []
-var current_wave_spawn_index = 0
 var enemies_to_spawn = []
-var enemies_left = 0
 
 func _ready():
-	units_root.y_sort_enabled = true  # Enable Y-sorting
+	units_root.y_sort_enabled = true
 	player_tower_hp_bar.max_value = 50
 	player_tower_hp_bar.value = player_tower_hp
 	enemy_tower_hp_bar.max_value = 50
 	enemy_tower_hp_bar.value = enemy_tower_hp
 
-	spawn_timer.wait_time = 3.0
 	unit_button.pressed.connect(spawn_unit)
 	warrior_button.pressed.connect(spawn_warrior)
 	archer_button.pressed.connect(spawn_archer)
@@ -70,8 +65,14 @@ func _ready():
 func _process(delta):
 	if game_over:
 		return
+
 	update_units(delta)
 	update_ui()
+
+	if wave_in_progress and enemy_units.is_empty() and enemies_to_spawn.is_empty():
+		wave_in_progress = false
+		await get_tree().create_timer(1.0).timeout
+		next_wave()
 
 	if player_tower_hp <= 0:
 		show_game_result("Defeat!")
@@ -94,7 +95,7 @@ func spawn_unit():
 	unit.set_meta("damage", 2)
 	unit.add_to_group("player")
 	unit.set_meta("unit_type", "melee")
-	units_root.add_child(unit)  # NEW: Add to UnitsRoot
+	units_root.add_child(unit)
 	player_units.append(unit)
 
 	var hp_bar = hp_bar_scene.instantiate()
@@ -143,17 +144,7 @@ func spawn_archer():
 	unit.set_meta("hp_bar", hp_bar)
 	hp_bar.set_health(unit.get_meta("hp"), unit.get_meta("hp"))
 
-func _on_enemy_spawn_timer_timeout():
-	if enemies_left <= 0 or current_wave_spawn_index >= enemies_to_spawn.size():
-		spawn_timer.stop()
-		await get_tree().create_timer(5.0).timeout
-		next_wave()
-		return
-
-	var enemy_type = enemies_to_spawn[current_wave_spawn_index]
-	current_wave_spawn_index += 1
-	enemies_left -= 1
-
+func spawn_enemy(enemy_type: String):
 	var enemy = enemy_scene.instantiate()
 	var lane_y = lanes.pick_random()
 	enemy.position = enemy_tower.position + Vector2(-50, lane_y)
@@ -166,7 +157,7 @@ func _on_enemy_spawn_timer_timeout():
 		enemy.set_meta("damage", 1)
 
 	enemy.add_to_group("enemy")
-	units_root.add_child(enemy)  # NEW: Add to UnitsRoot
+	units_root.add_child(enemy)
 	enemy_units.append(enemy)
 
 	var hp_bar = hp_bar_scene.instantiate()
@@ -189,9 +180,14 @@ func start_wave():
 		for i in range(entry["count"]):
 			enemies_to_spawn.append(entry["type"])
 
-	enemies_left = enemies_to_spawn.size()
-	current_wave_spawn_index = 0
-	spawn_timer.start()
+	spawn_enemies_slowly()
+
+func spawn_enemies_slowly():
+	await get_tree().process_frame
+	for enemy_type in enemies_to_spawn:
+		spawn_enemy(enemy_type)
+		await get_tree().create_timer(1.0).timeout
+	enemies_to_spawn.clear()
 
 func next_wave():
 	wave += 1
@@ -248,9 +244,11 @@ func handle_combat(attacker, target, is_enemy, delta):
 			if is_enemy:
 				player_tower_hp = max(player_tower_hp - dmg, 0)
 				show_floating_text(player_tower.position, dmg)
+				shake_node(player_tower)  # 👈 Shake when damaged
 			else:
 				enemy_tower_hp = max(enemy_tower_hp - dmg, 0)
 				show_floating_text(enemy_tower.position, dmg)
+				shake_node(enemy_tower)  # 👈 Shake when damaged
 			timer = 0
 		attacker.set_meta("attack_timer", timer)
 	elif is_instance_valid(target):
@@ -261,17 +259,20 @@ func handle_combat(attacker, target, is_enemy, delta):
 			var target_hp = target.get_meta("hp", 10)
 			target_hp -= dmg
 			target.set_meta("hp", target_hp)
+
 			if target.has_meta("hp_bar"):
 				target.get_meta("hp_bar").set_health(target_hp, target.get_meta("max_hp", target_hp))
 			show_floating_text(target.position, dmg)
+
 			if target_hp <= 0:
 				if not is_enemy:
 					money += 10
-				target.queue_free()
-				if is_enemy:
+				if is_enemy and enemy_units.has(target):
 					enemy_units.erase(target)
-				else:
+				elif not is_enemy and player_units.has(target):
 					player_units.erase(target)
+				target.queue_free()
+
 			timer = 0
 		attacker.set_meta("attack_timer", timer)
 
@@ -292,9 +293,15 @@ func shake_camera(duration := 0.2, intensity := 6):
 	tween.tween_property(camera, "offset", random_offset, duration / 2)
 	tween.tween_property(camera, "offset", Vector2.ZERO, duration / 2)
 
+func shake_node(node: Node2D, duration := 0.2, intensity := 5):  # ✅ NEW
+	var tween = create_tween()
+	var original_pos = node.position
+	var offset = Vector2(randf_range(-intensity, intensity), randf_range(-intensity, intensity))
+	tween.tween_property(node, "position", original_pos + offset, duration / 2)
+	tween.tween_property(node, "position", original_pos, duration / 2)
+
 func show_game_result(result_text: String):
 	game_over = true
-	spawn_timer.stop()
 	game_over_label.text = result_text
 	game_over_label.visible = true
 	game_over_label.modulate.a = 0.0
