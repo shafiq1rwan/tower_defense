@@ -943,13 +943,13 @@ text = "Quit"
 position = Vector2(176, 552)
 sprite_frames = SubResource("SpriteFrames_xfvwf")
 autoplay = "default"
-frame_progress = 0.25442
+frame_progress = 0.253473
 
 [node name="Trees2" type="AnimatedSprite2D" parent="Group Deco"]
 position = Vector2(1008, 552)
 sprite_frames = SubResource("SpriteFrames_xfvwf")
 autoplay = "default"
-frame_progress = 0.995974
+frame_progress = 0.995026
 
 [node name="01" type="Sprite2D" parent="Group Deco"]
 position = Vector2(264, 632)
