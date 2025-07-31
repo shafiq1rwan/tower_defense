@@ -24,7 +24,7 @@ var enemy_scene = preload("res://scenes/enemy.tscn")
 var floating_text_scene = preload("res://scenes/floating_text.tscn")
 var hp_bar_scene = preload("res://scenes/hp_bar.tscn")
 
-const ATTACK_RANGE = 40
+const ATTACK_RANGE = 60
 
 var wave := 1
 var wave_in_progress := false
