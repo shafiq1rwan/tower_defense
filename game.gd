@@ -63,6 +63,7 @@ func _ready():
 	warrior_button.pressed.connect(spawn_warrior)
 	archer_button.pressed.connect(spawn_archer)
 	
+	await show_wave_banner()
 	start_enemy_spawn_loop()
 	start_money_loop()
 	#start_wave()
@@ -212,7 +213,7 @@ func next_wave():
 	start_wave()
 
 func show_wave_banner():
-	wave_banner.text = "Wave " + str(wave)
+	wave_banner.text = "Wave Start"
 	wave_banner.visible = true
 	wave_banner.modulate = Color(1, 1, 1, 0)
 	wave_banner.scale = Vector2(0.8, 0.8)
@@ -376,7 +377,7 @@ func _on_resume_button_pressed():
 
 func _on_main_menu_button_pressed():
 	is_paused = false
-	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
+	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
 
 func start_enemy_spawn_loop():
 	spawn_enemy("normal")
@@ -385,8 +386,12 @@ func start_enemy_spawn_loop():
 		start_enemy_spawn_loop()
 
 func start_money_loop():
+	if is_paused or game_over:
+		await get_tree().create_timer(0.1, false, true).timeout  # runs during pause
+		start_money_loop()
+		return
+
 	money += 1
 	update_ui()
-	await get_tree().create_timer(0.7).timeout
-	if not game_over and not is_paused:
-		start_money_loop()
+	await get_tree().create_timer(0.2, false, true).timeout  # add the third param: true
+	start_money_loop()
