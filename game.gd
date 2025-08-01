@@ -15,6 +15,10 @@ extends Node2D
 @onready var game_over_dim = $CanvasLayer/GameOverDim
 @onready var restart_button = $CanvasLayer/RestartButton
 @onready var quit_button = $CanvasLayer/QuitButton
+@onready var pause_button = $CanvasLayer/PauseButton
+@onready var pause_overlay = $CanvasLayer/PauseOverlay
+@onready var resume_button = $CanvasLayer/PauseOverlay/VBoxContainer/ResumeButton
+@onready var main_menu_button = $CanvasLayer/PauseOverlay/VBoxContainer/MainMenuButton
 
 # Preload scenes
 var archer_scene = preload("res://scenes/archer.tscn")
@@ -46,6 +50,7 @@ var waves = [
 
 var current_wave_plan = []
 var enemies_to_spawn = []
+var is_paused = false
 
 func _ready():
 	units_root.y_sort_enabled = true
@@ -57,11 +62,15 @@ func _ready():
 	unit_button.pressed.connect(spawn_unit)
 	warrior_button.pressed.connect(spawn_warrior)
 	archer_button.pressed.connect(spawn_archer)
+	
 	start_wave()
 	update_ui()
 
 func _process(delta):
 	if game_over:
+		return
+		
+	if is_paused:
 		return
 
 	update_units(delta)
@@ -352,3 +361,17 @@ func _on_restart_button_pressed():
 
 func _on_quit_button_pressed():
 	get_tree().quit()
+
+func _on_pause_button_pressed():
+	is_paused = true
+	pause_overlay.visible = true
+	pause_button.visible = false
+
+func _on_resume_button_pressed():
+	is_paused = false
+	pause_overlay.visible = false
+	pause_button.visible = true
+
+func _on_main_menu_button_pressed():
+	is_paused = false
+	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")

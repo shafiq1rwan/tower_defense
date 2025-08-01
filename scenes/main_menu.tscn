@@ -1,0 +1,115 @@
+[gd_scene load_steps=6 format=3 uid="uid://cxc77nhwu6cfg"]
+
+[ext_resource type="Script" uid="uid://cuvfmosp8dqk0" path="res://scripts/main_menu.gd" id="1_bqqt6"]
+[ext_resource type="Texture2D" uid="uid://rcmi5xxnqorl" path="res://assets/Buttons/Button_Hover_3Slides.png" id="1_ekxnf"]
+[ext_resource type="Texture2D" uid="uid://4s86df5da8t5" path="res://assets/Buttons/Button_Disable_3Slides.png" id="2_bqqt6"]
+
+[sub_resource type="LabelSettings" id="LabelSettings_wu84c"]
+font_size = 111
+
+[sub_resource type="LabelSettings" id="LabelSettings_8ln24"]
+
+[node name="Main Menu" type="Node2D"]
+script = ExtResource("1_bqqt6")
+
+[node name="Control" type="Control" parent="."]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+
+[node name="Background" type="ColorRect" parent="Control"]
+layout_mode = 0
+offset_right = 1280.0
+offset_bottom = 720.0
+color = Color(0.776546, 0.481512, 0.50947, 1)
+
+[node name="MainMenuLabel" type="Label" parent="Control/Background"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -302.0
+offset_top = 200.0
+offset_right = 302.0
+offset_bottom = 352.0
+grow_horizontal = 2
+text = "Main Menu"
+label_settings = SubResource("LabelSettings_wu84c")
+
+[node name="MainMenuLabel2" type="Label" parent="Control/Background"]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = 576.0
+offset_top = 688.0
+offset_right = 621.0
+offset_bottom = 711.0
+grow_horizontal = 2
+text = "v1.0.0"
+label_settings = SubResource("LabelSettings_8ln24")
+
+[node name="StartButton" type="TextureButton" parent="Control/Background"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -104.0
+offset_top = 120.0
+offset_right = 88.0
+offset_bottom = 184.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("1_ekxnf")
+texture_pressed = ExtResource("2_bqqt6")
+
+[node name="Label" type="Label" parent="Control/Background/StartButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.5
+offset_right = 20.0
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Start"
+
+[node name="ExitButton" type="TextureButton" parent="Control/Background"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -104.0
+offset_top = 200.0
+offset_right = 88.0
+offset_bottom = 264.0
+grow_horizontal = 2
+grow_vertical = 2
+texture_normal = ExtResource("1_ekxnf")
+texture_pressed = ExtResource("2_bqqt6")
+
+[node name="Label" type="Label" parent="Control/Background/ExitButton"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.5
+offset_right = 20.0
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+text = "Quit"
+
+[connection signal="pressed" from="Control/Background/StartButton" to="." method="_on_start_button_pressed"]
