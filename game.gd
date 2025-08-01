@@ -36,7 +36,7 @@ var player_units = []
 var enemy_units = []
 var player_tower_hp = 50
 var enemy_tower_hp = 50
-var money = 50
+var money = 0
 var lanes = [40, 60, 80]
 var lane_index = 0
 var game_over = false
@@ -63,7 +63,9 @@ func _ready():
 	warrior_button.pressed.connect(spawn_warrior)
 	archer_button.pressed.connect(spawn_archer)
 	
-	start_wave()
+	start_enemy_spawn_loop()
+	start_money_loop()
+	#start_wave()
 	update_ui()
 
 func _process(delta):
@@ -375,3 +377,16 @@ func _on_resume_button_pressed():
 func _on_main_menu_button_pressed():
 	is_paused = false
 	get_tree().change_scene_to_file("res://scenes/MainMenu.tscn")
+
+func start_enemy_spawn_loop():
+	spawn_enemy("normal")
+	await get_tree().create_timer(10.0).timeout
+	if not game_over and not is_paused:
+		start_enemy_spawn_loop()
+
+func start_money_loop():
+	money += 1
+	update_ui()
+	await get_tree().create_timer(0.7).timeout
+	if not game_over and not is_paused:
+		start_money_loop()
