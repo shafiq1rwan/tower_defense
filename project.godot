@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="TurnBased2D"
-run/main_scene="uid://cxc77nhwu6cfg"
+run/main_scene="uid://re31twqfkn07"
 config/features=PackedStringArray("4.4", "Forward Plus")
 boot_splash/image="uid://bhfjug458bnke"
 config/icon="res://icon.svg"
