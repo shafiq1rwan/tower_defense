@@ -1,4 +1,4 @@
-[gd_scene load_steps=35 format=3 uid="uid://re31twqfkn07"]
+[gd_scene load_steps=36 format=3 uid="uid://re31twqfkn07"]
 
 [ext_resource type="Texture2D" uid="uid://by4y10jpkrxxk" path="res://assets/Hills Free (update 3.0).png" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://dcm1jx2wvfeik" path="res://game.gd" id="1_ryrav"]
@@ -19,6 +19,7 @@
 [ext_resource type="Texture2D" uid="uid://bdxuxx3tawe2y" path="res://assets/terrain/deco/09.png" id="15_qhcbd"]
 [ext_resource type="Texture2D" uid="uid://beuj40h56juec" path="res://assets/terrain/deco/16.png" id="16_f1jbl"]
 [ext_resource type="Texture2D" uid="uid://cgdkpqoquaivj" path="res://assets/terrain/deco/11.png" id="17_vaj68"]
+[ext_resource type="AudioStream" uid="uid://622jx2aynl8k" path="res://bgm/bgm.mp3" id="20_e36ub"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_215e1"]
 texture = ExtResource("3_iotsf")
@@ -1048,6 +1049,10 @@ autostart = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 position = Vector2(640, 360)
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("20_e36ub")
+autoplay = true
 
 [connection signal="pressed" from="CanvasLayer/PauseButton" to="." method="_on_pause_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/PauseOverlay/VBoxContainer/ResumeButton" to="." method="_on_resume_button_pressed"]
